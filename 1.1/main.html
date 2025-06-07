@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script>
+      const askName = prompt("Please enter your name:");
+      alert(`Hello, ${askName}`);
+      const name = document.getElementById("name");
+      console.log(name);
+      function updateName(event) {
+        // console.log("Update name");
+        // console.log("Event: ", event);
+        // console.log("Event target: ", event.target);
+        // console.log("Event target value: ", event.target.value);
+        const newName = event.target.value;
+        document.getElementById("greeting").textContent = `Hello, ${newName}`;
+      }
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1 id="greeting">Hello,</h1>
+      <p>Paragraph 1</p>
+      <label for="name" style="font-size: 25px">Name:</label>
+      <input
+        id="name"
+        type="text"
+        defaultValue="{askName}"
+        onkeydown="updateName(event)"
+        onkeyup="updateName(event)"
+      />
+    </main>
+  </body>
+</html>

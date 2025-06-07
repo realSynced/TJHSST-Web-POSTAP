@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Escape Room</title>
+    <link rel="stylesheet" href="/static/start.css" />
+    <link rel="stylesheet" href="/static/global.css" />
+    <link rel="stylesheet" href="/static/freedom.css" />
+    <style>
+      .freedom-container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-family: "Courier New", monospace;
+      }
+
+      .congratulations {
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 30px;
+        border: 1px solid #00ff00;
+        box-shadow: 0 0 30px #00ff00;
+        max-width: 600px;
+        margin-bottom: 40px;
+      }
+
+      .title {
+        color: #00ff00;
+        font-size: 2em;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+      }
+
+      .message {
+        margin-bottom: 20px;
+        line-height: 1.6;
+        font-size: 1.1em;
+      }
+
+      .highlight {
+        color: #00ff00;
+        font-weight: bold;
+      }
+
+      .name-highlight {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 1.2em;
+        text-shadow: 0 0 10px #ffffff, 0 0 20px #00ff00;
+        animation: pulse 2s infinite;
+      }
+
+      .buttons {
+        margin-top: 30px;
+      }
+
+      .button {
+        background-color: rgba(0, 0, 0, 0.7);
+        border: 1px solid #00ff00;
+        color: #00ff00;
+        padding: 10px 20px;
+        font-family: "Courier New", monospace;
+        cursor: pointer;
+        margin: 10px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+      }
+
+      .button:hover {
+        background-color: rgba(0, 255, 0, 0.2);
+        box-shadow: 0 0 15px #00ff00;
+      }
+
+      .red-pill {
+        border-color: #ff0000;
+        color: #ff0000;
+      }
+
+      .red-pill:hover {
+        background-color: rgba(255, 0, 0, 0.2);
+        box-shadow: 0 0 15px #ff0000;
+      }
+
+      .blue-pill {
+        border-color: #0000ff;
+        color: #0000ff;
+      }
+
+      .blue-pill:hover {
+        background-color: rgba(0, 0, 255, 0.2);
+        box-shadow: 0 0 15px #0000ff;
+      }
+
+      .timer {
+        margin-top: 20px;
+        font-size: 1.2em;
+      }
+
+      .stats {
+        margin-top: 40px;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border: 1px solid #00ff00;
+        text-align: center;
+      }
+
+      .stats-title {
+        color: #00ff00;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+      }
+
+      .credits {
+        position: absolute;
+        bottom: 20px;
+        font-size: 0.8em;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      @keyframes pulse {
+        0% {
+          text-shadow: 0 0 10px #ffffff, 0 0 20px #00ff00;
+        }
+        50% {
+          text-shadow: 0 0 15px #ffffff, 0 0 30px #00ff00, 0 0 40px #00ff00;
+        }
+        100% {
+          text-shadow: 0 0 10px #ffffff, 0 0 20px #00ff00;
+        }
+      }
+
+      .typewriter {
+        overflow: hidden;
+        border-right: 0.15em solid #00ff00;
+        white-space: nowrap;
+        margin: 0 auto;
+        letter-spacing: 0.15em;
+        animation: typing 3.5s steps(40, end),
+          blink-caret 0.75s step-end infinite;
+      }
+
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+
+      @keyframes blink-caret {
+        from,
+        to {
+          border-color: transparent;
+        }
+        50% {
+          border-color: #00ff00;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="freedom-container">
+      <div class="congratulations">
+        <h1 class="title typewriter">FREEDOM ACHIEVED</h1>
+        <div class="message">
+          <p>
+            Congratulations,
+            <span class="name-highlight" id="player-name"></span>. You have
+            successfully escaped the system.
+          </p>
+          <p>
+            The Agents have been <span class="highlight">neutralized</span>, but
+            they will return.
+          </p>
+          <p>
+            You've shown exceptional skills in navigating the Matrix. Our team
+            has been monitoring your progress.
+          </p>
+          <p>Now you face your final choice:</p>
+        </div>
+        <div class="buttons">
+          <button class="button red-pill" onclick="redPill()">
+            Take the Red Pill
+          </button>
+          <button class="button blue-pill" onclick="bluePill()">
+            Take the Blue Pill
+          </button>
+        </div>
+        <div class="timer" id="decision-timer">
+          Decision time remaining: <span id="timer-text">30</span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stats-title">ESCAPE STATISTICS</div>
+        <p>Player: <span id="stats-name"></span></p>
+        <p>Time to escape: <span id="escape-time">4:12</span></p>
+        <p>Puzzle solved: <span class="highlight">YES</span></p>
+      </div>
+
+      <!-- <div class="credits">
+        Digital Escape Room Experience - Created with Flask and JavaScript
+      </div> -->
+    </div>
+
+    <div class="matrix_animation matrix">
+      <img src="/static/matrix.gif" alt="Matrix" width="100%" height="100%" />
+    </div>
+
+    <div class="scan-line"></div>
+
+    <script>
+      const name = "{{ name }}";
+      let timeLeft = 30;
+      let timerInterval;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("player-name").textContent = name;
+        document.getElementById("stats-name").textContent = name;
+
+        // Start timer
+        startTimer();
+
+        const minutes = Math.floor(Math.random() * 2) + 3;
+        const seconds = Math.floor(Math.random() * 60);
+        document.getElementById(
+          "escape-time"
+        ).textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      });
+
+      function startTimer() {
+        const timerElement = document.getElementById("timer-text");
+
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          timerElement.textContent = timeLeft;
+
+          if (timeLeft <= 10) {
+            timerElement.style.color = "#ff0000";
+          }
+
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+
+            bluePill();
+          }
+        }, 1000);
+      }
+
+      function redPill() {
+        clearInterval(timerInterval);
+
+        document.body.style.animation = "glitch 0.2s infinite";
+
+        setTimeout(() => {
+          localStorage.setItem("pillChoice", "red");
+
+          window.location.href = "/truth?name=" + encodeURIComponent(name);
+        }, 1500);
+      }
+
+      function bluePill() {
+        clearInterval(timerInterval);
+
+        document.body.style.transition = "opacity 2s";
+        document.body.style.opacity = "0";
+
+        setTimeout(() => {
+          localStorage.setItem("pillChoice", "blue");
+
+          // Redirect to start (reset the game)
+          window.location.href = "/start";
+        }, 2000);
+      }
+    </script>
+  </body>
+</html>

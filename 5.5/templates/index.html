@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>List of Heroes</title>
+  </head>
+  <html>
+    <body>
+      <div>
+        <h1>List of Heroes</h1>
+        <ul>
+          {% for hero in heroes %}
+          <li>
+            <a href="/hero/{{hero.c_name}}">{{hero.c_name}}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </body>
+  </html>
+</html>

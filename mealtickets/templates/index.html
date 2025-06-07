@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meal Ticket Get</title>
+  </head>
+  <script>
+    let name = "";
+    window.onload = function() {
+      if (!document.getElementById("nameInput").value) {
+        name = prompt("Please enter your name");
+        document.getElementById("nameInput").value = name;
+      }
+      
+      if ("{{ editDetails.drinkSize }}") {
+        document.querySelector('input[name="drinkSize"][value="{{ editDetails.drinkSize }}"]').checked = true;
+      }
+    }
+  </script>
+  <body>
+    <h1>Meal Ticket POST</h1>
+    <form action="/confirm-order" method="GET">
+      <div>
+        <div>
+          <h3>Name:</h3><input type="text" name="name" value="{% if editDetails.name %}{{ editDetails.name }}{% endif %}" id="nameInput"/>
+          <h3>Select your meal, </h3>
+        </div>
+        <select name="meal">
+          {% for meal in mealChoices %}
+          <option value="{{ meal }}" {% if editDetails.meal == meal %}selected{% endif %}>{{ meal }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <h3>Select your drink</h3>
+        <select name="drink">
+          {% for drink in drinkChoices %}
+          <option value="{{ drink }}" {% if editDetails.drink == drink %}selected{% endif %}>{{ drink }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <h3>Select your drink size</h3>
+        <input type="radio" name="drinkSize" value="Small" id="small" {% if not editDetails.drinkSize or editDetails.drinkSize == 'Small' %}checked{% endif %}>Small</input>
+        <input type="radio" name="drinkSize" value="Medium" id="medium" {% if editDetails.drinkSize == 'Medium' %}checked{% endif %}>Medium</input>
+        <input type="radio" name="drinkSize" value="Large" id="large" {% if editDetails.drinkSize == 'Large' %}checked{% endif %}>Large</input>
+      </div>
+      <div>
+        <h3>Select your dessert</h3>
+        <select name="dessert">
+          {% for dessert in dessertChoices %}
+          <option value="{{ dessert }}" {% if editDetails.dessert == dessert %}selected{% endif %}>{{ dessert }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="margin-top: 10px;">
+        <button type="submit" name="name">Place Order</button>
+      </div>
+    </form>
+  </body>
+</html>

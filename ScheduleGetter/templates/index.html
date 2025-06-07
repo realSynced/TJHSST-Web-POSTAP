@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <style type="text/css">
+      .schedule_container {
+        width: 50vh;
+        margin: auto;
+      }
+      .image_container > img {
+        width: 50vh;
+      }
+      .display_container {
+        display: block;
+        background-color: blue;
+      }
+      .lefty {
+        float: left;
+      }
+      .righty {
+        float: right;
+      }
+      .red_day {
+        color: red;
+      }
+      .blue_day {
+        color: blue;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h3>Schedule Viewer</h3>
+
+    <div class="schedule_container">
+      <input type="date" id="cal_picker" />
+      <div class="display_container">
+        <div class="lefty">
+          <span id="schedule_disp">Placeholders</span>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    function formatTime(timeString) {
+      // If timeString is undefined or null
+      if (!timeString) {
+        return "N/A";
+      }
+
+      try {
+        // Split time string (assuming format like "08:30:00" or "15:45:00")
+        const timeParts = timeString.split(":");
+
+        if (timeParts.length < 2) {
+          return timeString; // Return original if not in expected format
+        }
+
+        let hour = parseInt(timeParts[0], 10);
+        const minute = timeParts[1].padStart(2, "0");
+        const ampm = hour >= 12 ? "PM" : "AM";
+
+        // Convert hour to 12-hour format
+        hour = hour % 12;
+        hour = hour ? hour : 12; // If hour is 0, make it 12
+
+        return `${hour}:${minute} ${ampm}`;
+      } catch (error) {
+        console.error("Error formatting time:", error);
+        return timeString; // Return original on error
+      }
+    }
+
+    const scheduleFetch = async () => {
+      let date = document.querySelector("#cal_picker").value;
+      console.log("Fetching schedule from server...");
+      console.log("Date selected: " + date);
+      const response = await fetch(
+        "http://127.0.0.1/get_schedule_from_ion/" + date
+      );
+      const data = await response.json();
+      console.log("Schedule data:", data);
+
+      const displayContainer = document.querySelector(".display_container");
+
+      const oldLefty = document.querySelector(".lefty");
+      if (oldLefty) {
+        displayContainer.removeChild(oldLefty);
+      }
+
+      const newLefty = document.createElement("div");
+      newLefty.className = "lefty";
+
+      newLefty.innerHTML = `
+        <h2>Schedule for ${date}</h2>
+        <p class="${data.day_type.name
+          .toLowerCase()
+          .split(" ")
+          .join(
+            "_"
+          )}" style="color: ${data.day_type.name.toLowerCase()}">Day Type: ${
+        data.day_type.name
+      }</p>
+        <p>Blocks:</p>
+        <table border="1" cellpadding="5" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Block</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.day_type.blocks
+              .map(
+                (block) => `
+                <tr>
+                  <td>${block.name}</td>
+                  <td>${formatTime(block.start_time || block.start)}</td>
+                  <td>${formatTime(block.end_time || block.end)}</td>
+                </tr>
+              `
+              )
+              .join("")}
+          </tbody>
+        </table>
+      `;
+
+      displayContainer.appendChild(newLefty);
+    };
+
+    function updateSchedule() {
+      const displayContainer = document.querySelector(".display_container");
+      displayContainer.innerHTML = "<div class='lefty'>Loading...</div>";
+      console.log("Updating schedule...");
+      scheduleFetch();
+    }
+
+    document.querySelector("#cal_picker").onchange = function () {
+      updateSchedule();
+    };
+  </script>
+</html>

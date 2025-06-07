@@ -1,0 +1,110 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.typewriter-container, .time-container, .start-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: max-content;
+  width: 100%;
+  margin: 20px 0;
+}
+
+h1,
+p {
+  user-select: none;
+  color: #00ff6a;
+  font-family: monospace;
+  font-size: 24px;
+}
+
+.typewriter-text {
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  border-right: 0.15em solid orange; /* The typwriter cursor */
+  white-space: nowrap; /* Keeps the content on a single line */
+  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  letter-spacing: 0.15em; /* Adjust as needed */
+  animation: blink-caret 0.75s step-end infinite;
+}
+
+/* Hide elements initially */
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Show elements with fade-in */
+.time-container p:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+  animation: fadeIn 2s ease-in-out;
+}
+
+/* Start button styling */
+#start-button {
+  background-color: transparent;
+  color: #00ff6a;
+  border: 2px solid #00ff6a;
+  padding: 10px 20px;
+  font-family: monospace;
+  font-size: 20px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+#start-button:hover {
+  background-color: rgba(0, 255, 106, 0.2);
+}
+
+#start-button:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Flickering effect for the start button */
+.flicker {
+  animation: flicker 2s linear infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: orange;
+  }
+}
+
+/* Flickering animation */
+@keyframes flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 1;
+    text-shadow: 0 0 5px #00ff6a, 0 0 10px #00ff6a;
+    box-shadow: 0 0 5px #00ff6a, 0 0 10px #00ff6a;
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.4;
+    text-shadow: none;
+    box-shadow: none;
+  }
+}

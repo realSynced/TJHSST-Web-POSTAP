@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Escape Room</title>
+    <link rel="stylesheet" href="/static/start.css" />
+    <link rel="stylesheet" href="/static/global.css" />
+    <script src="/static/timer.js"></script>
+    <style>
+      body {
+        background-color: #000;
+        margin: 0;
+        overflow: hidden;
+        font-family: "Courier New", monospace;
+      }
+
+      .container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .matrix-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.6;
+      }
+
+      .message-panel {
+        color: #00ff00;
+        font-family: "Courier New", monospace;
+        text-align: center;
+        padding: 25px;
+        background-color: rgba(0, 0, 0, 0.8);
+        border: 1px solid #00ff00;
+        box-shadow: 0 0 15px #00ff00;
+        max-width: 700px;
+        margin-bottom: 40px;
+      }
+
+      .doors-container {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        max-width: 800px;
+        margin-top: 30px;
+      }
+
+      .door-choice {
+        position: relative;
+        width: 180px;
+        height: 300px;
+        perspective: 1000px;
+        margin: 0 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .door-frame {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border: 3px solid;
+        box-shadow: 0 0 20px;
+        overflow: hidden;
+        transition: all 0.5s;
+      }
+
+      .red-door .door-frame {
+        border-color: #ff0000;
+        box-shadow: 0 0 20px #ff0000;
+      }
+
+      .blue-door .door-frame {
+        border-color: #0000ff;
+        box-shadow: 0 0 20px #0000ff;
+      }
+
+      .door {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transform-origin: left;
+        transition: transform 1.5s;
+        transform-style: preserve-3d;
+      }
+
+      .red-door .door {
+        background-color: rgba(255, 0, 0, 0.2);
+        border: 1px solid #ff0000;
+      }
+
+      .blue-door .door {
+        background-color: rgba(0, 0, 255, 0.2);
+        border: 1px solid #0000ff;
+      }
+
+      .door-handle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 15px;
+        height: 30px;
+        border-radius: 3px;
+        z-index: 5;
+      }
+
+      .red-door .door-handle {
+        background-color: #ff0000;
+        box-shadow: 0 0 10px #ff0000;
+      }
+
+      .blue-door .door-handle {
+        background-color: #0000ff;
+        box-shadow: 0 0 10px #0000ff;
+      }
+
+      .door-label {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 1.2em;
+        font-weight: bold;
+        text-shadow: 0 0 10px;
+      }
+
+      .red-door .door-label {
+        color: #ff0000;
+        text-shadow: 0 0 10px #ff0000;
+      }
+
+      .blue-door .door-label {
+        color: #0000ff;
+        text-shadow: 0 0 10px #0000ff;
+      }
+
+      .door-choice:hover .door-frame {
+        transform: scale(1.05);
+      }
+
+      .door.open {
+        transform: rotateY(-70deg);
+      }
+
+      .door-inner {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 1.2em;
+      }
+
+      .scan-line {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background-color: rgba(0, 255, 0, 0.5);
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+        animation: scan 4s linear infinite;
+        z-index: 50;
+        pointer-events: none;
+      }
+
+      @keyframes scan {
+        0% {
+          top: -5px;
+        }
+        100% {
+          top: 100vh;
+        }
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          text-shadow: 0 0 10px;
+        }
+        50% {
+          text-shadow: 0 0 20px;
+        }
+        100% {
+          text-shadow: 0 0 10px;
+        }
+      }
+
+      .warning {
+        color: #ff0000;
+        animation: blink 1.5s infinite;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+
+      .timer-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border: 1px solid #00ff00;
+        padding: 10px 15px;
+        border-radius: 5px;
+        z-index: 100;
+      }
+
+      .countdown {
+        color: #ff0000;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .time-warning {
+        animation: blink 0.5s infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="timer-container">
+        <span id="countdown" class="countdown">05:00</span>
+      </div>
+      <div class="message-panel">
+        <h2>REALITY DIVERGENCE DETECTED</h2>
+        <p>
+          You have reached a critical junction in the system,
+          <span
+            id="player-name"
+            style="color: #ffffff; font-weight: bold"
+          ></span
+          >.
+        </p>
+        <p>
+          Both doors will lead you to freedom, but each represents a different
+          path.
+        </p>
+        <p>Choose wisely. Your decision cannot be undone.</p>
+        <p class="warning">
+          WARNING: Agents are still in pursuit. Make your choice quickly.
+        </p>
+      </div>
+
+      <div class="doors-container">
+        <div class="door-choice red-door" onclick="chooseDoor('red')">
+          <div class="door-frame">
+            <div class="door" id="red-door">
+              <div class="door-handle"></div>
+              <div class="door-inner">TRUTH</div>
+            </div>
+          </div>
+          <div class="door-label">RED DOOR</div>
+        </div>
+
+        <div class="door-choice blue-door" onclick="chooseDoor('blue')">
+          <div class="door-frame">
+            <div class="door" id="blue-door">
+              <div class="door-handle"></div>
+              <div class="door-inner">ILLUSION</div>
+            </div>
+          </div>
+          <div class="door-label">BLUE DOOR</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="matrix-background">
+      <img src="/static/matrix.gif" alt="Matrix" width="100%" height="100%" />
+    </div>
+
+    <div class="scan-line"></div>
+
+    <script>
+      const playerName = "{{ name }}";
+      let doorChosen = false;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("player-name").textContent = playerName;
+
+        startCountdown();
+      });
+
+      function startCountdown() {
+        let timeLeft = 30;
+        const messagePanel = document.querySelector(".message-panel");
+
+        if (!document.getElementById("countdown")) {
+          const countdownElem = document.createElement("p");
+          countdownElem.id = "countdown";
+          countdownElem.style.fontSize = "1.5em";
+          countdownElem.style.color = "#ff0000";
+          messagePanel.appendChild(countdownElem);
+        }
+
+        const countdownInterval = setInterval(() => {
+          if (doorChosen) {
+            clearInterval(countdownInterval);
+            return;
+          }
+
+          document.getElementById(
+            "countdown"
+          ).textContent = `Time remaining: ${timeLeft} seconds`;
+
+          if (timeLeft <= 10) {
+            document.getElementById("countdown").style.animation =
+              "blink 0.5s infinite";
+          }
+
+          if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+
+            chooseDoor("blue");
+          }
+
+          timeLeft--;
+        }, 1000);
+      }
+
+      function chooseDoor(color) {
+        if (doorChosen) return;
+        doorChosen = true;
+
+        document.getElementById(`${color}-door`).classList.add("open");
+
+        setTimeout(() => {
+          if (color === "red") {
+            window.location.href =
+              "/truth?name=" + encodeURIComponent(playerName);
+          } else {
+            window.location.href =
+              "/illusion?name=" + encodeURIComponent(playerName);
+          }
+        }, 2000);
+      }
+    </script>
+  </body>
+</html>

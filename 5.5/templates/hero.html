@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hero Details</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <style>
+    div {
+      margin-bottom: 12px;
+    }
+    input {
+      border-radius: 5px;
+      padding: 2px 5px;
+    }
+    button {
+      background-color: aqua;
+      border: 1px solid black;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <div>
+      <h1>Hero Details</h1>
+      <form action="/hero_backend" method="post" preventDefault>
+        <div>
+          <label for="c_name">Name:</label>
+          <input type="text" id="name" name="name" value="{{hero.c_name}}" />
+        </div>
+        <div>
+          <label for="wit">Wit:</label>
+          <input type="text" id="wit" name="wit" value="{{hero.c_wit}}" />
+        </div>
+        <div>
+          <label for="strength">Strength:</label>
+          <input
+            type="text"
+            id="strength"
+            name="strength"
+            value="{{hero.c_strength}}"
+          />
+        </div>
+        <div>
+          <label for="c_attack">Attack:</label>
+          <input
+            type="text"
+            id="attack"
+            name="attack"
+            value="{{hero.c_attack}}"
+          />
+        </div>
+        <div>
+          <label for="c_defense">Defense:</label>
+          <input
+            type="text"
+            id="defense"
+            name="defense"
+            value="{{hero.c_defense}}"
+          />
+        </div>
+        <div>
+          <label for="magic">Magic:</label>
+          <input type="text" id="magic" name="magic" value="{{hero.c_magic}}" />
+        </div>
+        <button type="submit">Update</button>
+      </form>
+    </div>
+  </body>
+</html>

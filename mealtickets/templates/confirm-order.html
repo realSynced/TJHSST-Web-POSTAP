@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirm Order</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Confirm Your Order</h1>
+    <form
+      action="/order?meal={{ meal }}&drink={{ drink }}&drinkSize={{ drinkSize }}&dessert={{ dessert }}&name={{ name }}"
+      method="POST"
+    >
+      <div>
+        <h2>Your Order Details</h2>
+
+        <div>
+          <span>Meal:</span>
+          <span>{{ meal }}</span>
+        </div>
+
+        <div>
+          <span>Drink:</span>
+          <span>{{ drink }} ({{ drinkSize }})</span>
+        </div>
+
+        <div>
+          <span>Dessert:</span>
+          <span>{{ dessert }}</span>
+        </div>
+
+        <div>
+          <span>Total:</span>
+          <span>${{ total}}</span>
+        </div>
+      </div>
+      <a href="/order?meal={{ meal }}&drink={{ drink }}&drinkSize={{ drinkSize }}&dessert={{ dessert }}&name={{ name }}" style="margin-top: 10px; cursor: pointer; display: inline-block; padding: 5px 10px; background-color: #f0f0f0; text-decoration: none; border: 1px solid #ccc; border-radius: 4px;">
+        Edit Order
+      </a>
+    </form>
+
+    <div>
+      <p>Thank you for your order, {{ name }}!</p>
+    </div>
+
+    <a href="/order">Place Another Order</a>
+    <a href="/kitchen">Kitchen Manager View</a>
+  </body>
+</html>

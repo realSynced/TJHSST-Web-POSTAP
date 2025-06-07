@@ -1,0 +1,33 @@
+.matrix {
+  display: absolute;
+  position: absolute;
+}
+
+.name-display {
+  margin: 20px 0;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  color: #00ff00;
+  text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+  animation: flicker 2s infinite;
+}
+
+.highlight-name {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.2em;
+  text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+  }
+  50% {
+    text-shadow: 0 0 15px #ffffff, 0 0 30px #ffffff, 0 0 40px #00ff00;
+  }
+  100% {
+    text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+  }
+}

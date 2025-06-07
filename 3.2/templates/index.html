@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <script>
+    // const button = document.querySelector("button");
+
+    window.onload = function () {
+      let count = localStorage.getItem("count");
+      count = count ? parseInt(count) : 0; // Initialize count if not present
+      document.getElementById("count").innerText = count;
+      count++;
+      localStorage.setItem("count", count); // Update count in localStorage
+      document.getElementById("count").innerText = count;
+
+      fetch("/store-data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(count),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+          // alert("Data sent to server");
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    };
+  </script>
+
+  <style>
+    body {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    p {
+      font-size: 2rem;
+      color: #333;
+    }
+  </style>
+
+  <body>
+    <h1>Number of times page has been visited</h1>
+    <!-- <button onclick="increaseCount()">Click</button> -->
+    <p id="count">{{ count }}</p>
+  </body>
+</html>

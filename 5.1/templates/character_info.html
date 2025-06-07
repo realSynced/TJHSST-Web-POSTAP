@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Characters</title>
+  </head>
+  <style>
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+  </style>
+  <body>
+    <h1>Player {{characters[0]['c_name']}}'s Stats</h1>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Wit</th>
+        <th>Strength</th>
+        <th>Attack</th>
+        <th>Defense</th>
+        <th>Magic</th>
+      </tr>
+      <tr>
+        <td>{{characters[0]['c_name']}}</td>
+        <td>{{characters[0]['c_wit']}}</td>
+        <td>{{characters[0]['c_strength']}}</td>
+        <td>{{characters[0]['c_attack']}}</td>
+        <td>{{characters[0]['c_defense']}}</td>
+        <td>{{characters[0]['c_magic']}}</td>
+      </tr>
+    </table>
+
+    <!-- <ul>
+      <li>{{characters[0]['c_name']}}</li>
+    </ul> -->
+  </body>
+</html>

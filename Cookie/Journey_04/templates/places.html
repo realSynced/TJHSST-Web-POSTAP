@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{current_location}}</title>
+</head>
+<body>
+
+  <h3>{{user_data.hero_name}} is in the {{current_location}}</h3>
+
+  <div>
+    {% for loc in outgoing_links %}
+    <a href='./{{loc['route_2'] }} '>{{loc['route_2']}}</a><br>
+	{% endfor %}
+  </div>
+
+  <div>
+    <h1>See the places you've visited: </h1>
+    <ul>
+      {% for place in user_data.visited_places %}
+      <li>{{place}}</li>  
+      {% endfor %}
+  </div>
+
+</body>
+</html>

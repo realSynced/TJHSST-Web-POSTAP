@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kitchen Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Kitchen Manager</h1>
+
+    <div>
+      <div>
+        <div>{{ order_count }}</div>
+        <div>Total Orders</div>
+      </div>
+      <div>
+        <div>${{ "%.2f"|format(total_revenue) }}</div>
+        <div>Total Revenue</div>
+      </div>
+    </div>
+
+    <h2>Order History</h2>
+
+    {% if orders %}
+    <table>
+      <thead>
+        <tr>
+          <th>Order #</th>
+          <th>Name</th>
+          <th>Meal</th>
+          <th>Drink</th>
+          <th>Size</th>
+          <th>Dessert</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.name }}</td>
+          <td>{{ order.meal }}</td>
+          <td>{{ order.drink }}</td>
+          <td>{{ order.drinkSize }}</td>
+          <td>{{ order.dessert }}</td>
+          <td>${{ "%.2f"|format(order.total) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No orders have been placed yet.</p>
+    {% endif %}
+
+    <a href="/order">Back to Order Form</a>
+  </body>
+</html>

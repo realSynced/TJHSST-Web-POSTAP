@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+  </head>
+  <script>
+    const url = window.location.href;
+    const name = url.split("/")[url.split("/").length - 1];
+    console.log("Selected character:", name);
+    localStorage.setItem("");
+  </script>
+  <body>
+    <h3>Thank you for selecting {{user_data.hero_name}}</h3>
+    <p>Ready to begin your journey?</p>
+
+    <div>
+      <a href="/places/palace">Begin your journey</a>
+    </div>
+  </body>
+</html>

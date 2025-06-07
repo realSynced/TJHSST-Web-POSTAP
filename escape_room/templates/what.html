@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Escape Room</title>
+    <link rel="stylesheet" href="/static/start.css" />
+    <link rel="stylesheet" href="/static/global.css" />
+    <link rel="stylesheet" href="/static/what.css" />
+    <script src="/static/timer.js"></script>
+    <style>
+      body {
+        background-color: #000;
+        margin: 0;
+        overflow: hidden;
+        font-family: "Courier New", monospace;
+      }
+
+      .container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .matrix-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.6;
+      }
+
+      .terminal {
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #00ff00;
+        padding: 25px;
+        border: 1px solid #00ff00;
+        border-radius: 5px;
+        box-shadow: 0 0 15px #00ff00;
+        width: 80%;
+        max-width: 800px;
+        position: relative;
+        z-index: 10;
+        margin-bottom: 30px;
+      }
+
+      .terminal-header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #00ff00;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+      }
+
+      .terminal-title {
+        font-weight: bold;
+        font-size: 18px;
+        text-transform: uppercase;
+      }
+
+      .terminal-status {
+        color: #ff3300;
+        animation: blink 1.5s infinite;
+      }
+
+      .message-area {
+        margin-bottom: 25px;
+        min-height: 150px;
+      }
+
+      .countdown-timer {
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .countdown {
+        color: #ff0000;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .time-warning {
+        animation: blink 0.5s infinite;
+      }
+
+      .puzzle-area {
+        text-align: center;
+        margin: 30px 0;
+        display: none;
+      }
+
+      .puzzle-clue {
+        font-size: 20px;
+        margin-bottom: 15px;
+        animation: glitch 1s linear infinite;
+      }
+
+      .puzzle-input {
+        background-color: rgba(0, 0, 0, 0.7);
+        border: 1px solid #00ff00;
+        color: #00ff00;
+        padding: 10px 15px;
+        font-family: "Courier New", monospace;
+        width: 250px;
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 16px;
+      }
+
+      .decrypt-button {
+        background-color: rgba(0, 0, 0, 0.7);
+        border: 1px solid #00ff00;
+        color: #00ff00;
+        padding: 8px 20px;
+        font-family: "Courier New", monospace;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .decrypt-button:hover {
+        background-color: rgba(0, 255, 0, 0.2);
+        box-shadow: 0 0 10px #00ff00;
+      }
+
+      .escape-button {
+        background-color: rgba(0, 0, 0, 0.8);
+        border: 2px solid #00ff00;
+        color: #00ff00;
+        padding: 15px 30px;
+        font-family: "Courier New", monospace;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0 15px #00ff00;
+        display: none;
+        margin-top: 30px;
+        animation: pulse 2s infinite;
+        text-transform: uppercase;
+      }
+
+      .warning-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 15px;
+        background-color: rgba(0, 0, 0, 0.9);
+        border: 1px solid #ff0000;
+        color: #ff0000;
+        font-family: "Courier New", monospace;
+        text-align: center;
+        display: none;
+        z-index: 20;
+      }
+
+      .scan-line {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background-color: rgba(0, 255, 0, 0.5);
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+        animation: scan 4s linear infinite;
+        z-index: 50;
+        pointer-events: none;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      @keyframes glitch {
+        0% {
+          transform: translate(0);
+        }
+        20% {
+          transform: translate(-2px, 2px);
+        }
+        40% {
+          transform: translate(-2px, -2px);
+        }
+        60% {
+          transform: translate(2px, 2px);
+        }
+        80% {
+          transform: translate(2px, -2px);
+        }
+        100% {
+          transform: translate(0);
+        }
+      }
+
+      @keyframes scan {
+        0% {
+          top: -5px;
+        }
+        100% {
+          top: 100vh;
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 15px #00ff00;
+        }
+        50% {
+          box-shadow: 0 0 30px #00ff00;
+        }
+        100% {
+          box-shadow: 0 0 15px #00ff00;
+        }
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="terminal-title">SYSTEM ALERT</div>
+          <div class="terminal-status">CONNECTION COMPROMISED</div>
+        </div>
+
+        <div class="message-area" id="message-area">
+          <!-- Messages will be typed here -->
+        </div>
+
+        <div class="countdown-timer">
+          <p>
+            Time remaining: <span id="countdown" class="countdown">05:00</span>
+          </p>
+        </div>
+
+        <div class="puzzle-area" id="puzzle-area">
+          <p>Access the emergency exit by solving the encryption:</p>
+          <p class="puzzle-clue">4-3-9-8-5-1</p>
+          <input
+            type="text"
+            id="puzzle-input"
+            class="puzzle-input"
+            placeholder="ENTER CODE"
+            autocomplete="off"
+          />
+          <br />
+          <button class="decrypt-button" id="decrypt-button">DECRYPT</button>
+        </div>
+      </div>
+
+      <!-- Direct link for escape using a form instead of JavaScript navigation -->
+      <form
+        action="/escape"
+        method="get"
+        id="escape-form"
+        style="display: none"
+      >
+        <input type="hidden" name="name" value="{{ name }}" />
+        <button type="submit" class="escape-button" id="escape-button">
+          CONTINUE TO ESCAPE
+        </button>
+      </form>
+    </div>
+
+    <div class="warning-message" id="warning-message">
+      <p>AGENTS DETECTED</p>
+      <p>LOCATION: <span class="location-text">UNKNOWN</span></p>
+    </div>
+
+    <div class="matrix-background">
+      <img src="/static/matrix.gif" alt="Matrix" width="100%" height="100%" />
+    </div>
+
+    <div class="scan-line"></div>
+
+    <script>
+      const playerName = "{{ name }}";
+
+      const messageArea = document.getElementById("message-area");
+      const puzzleArea = document.getElementById("puzzle-area");
+      const puzzleInput = document.getElementById("puzzle-input");
+      const decryptButton = document.getElementById("decrypt-button");
+      const escapeForm = document.getElementById("escape-form");
+      const escapeButton = document.getElementById("escape-button");
+      const countdownEl = document.getElementById("countdown");
+      const warningMessage = document.getElementById("warning-message");
+
+      let currentMessageIndex = 0;
+      let currentCharIndex = 0;
+
+      const messages = [
+        `SYSTEM ALERT: ${playerName.toUpperCase()}, YOUR LOCATION HAS BEEN COMPROMISED.`,
+        "THE AGENTS WILL ARRIVE SOON.",
+        "YOU MUST ESCAPE BEFORE THEY FIND YOU.",
+        "FIND THE EMERGENCY EXIT CODE TO PROCEED.",
+      ];
+
+      document.addEventListener("DOMContentLoaded", function () {
+        typeNextMessage();
+
+        setInterval(flashWarning, 10000);
+
+        decryptButton.addEventListener("click", checkCode);
+      });
+
+      function typeNextMessage() {
+        if (currentMessageIndex >= messages.length) {
+          setTimeout(() => {
+            puzzleArea.style.display = "block";
+            puzzleInput.focus();
+          }, 500);
+          return;
+        }
+
+        if (currentCharIndex === 0) {
+          const messagePara = document.createElement("p");
+          messagePara.id = `message-${currentMessageIndex}`;
+          messageArea.appendChild(messagePara);
+        }
+
+        const currentMessage = messages[currentMessageIndex];
+        const messagePara = document.getElementById(
+          `message-${currentMessageIndex}`
+        );
+
+        if (currentCharIndex < currentMessage.length) {
+          messagePara.textContent += currentMessage.charAt(currentCharIndex);
+          currentCharIndex++;
+
+          setTimeout(typeNextMessage, 30);
+        } else {
+          currentMessageIndex++;
+          currentCharIndex = 0;
+
+          setTimeout(typeNextMessage, 800);
+        }
+      }
+
+      function flashWarning() {
+        warningMessage.style.display = "block";
+
+        setTimeout(() => {
+          warningMessage.style.display = "none";
+        }, 800);
+      }
+
+      function checkCode() {
+        const enteredCode = puzzleInput.value.trim().toLowerCase();
+
+        if (enteredCode === "escape") {
+          puzzleArea.innerHTML =
+            '<p style="font-size: 18px; color: #00ff00;">ACCESS GRANTED</p><p>EMERGENCY EXIT UNLOCKED</p>';
+
+          escapeForm.style.display = "block";
+          escapeButton.style.display = "inline-block";
+
+          document.querySelector(".terminal").style.boxShadow =
+            "0 0 30px #00ff00";
+        } else {
+          puzzleInput.value = "";
+          puzzleInput.placeholder = "ACCESS DENIED - TRY AGAIN";
+
+          // Flash the terminal red
+          document.querySelector(".terminal").style.boxShadow =
+            "0 0 30px #ff0000";
+          setTimeout(() => {
+            document.querySelector(".terminal").style.boxShadow =
+              "0 0 15px #00ff00";
+          }, 500);
+        }
+      }
+
+      // Game over function
+      function gameOver() {
+        // Player is caught - redirect to start with caught parameter
+        window.location.href = "/start?caught=true";
+      }
+
+      puzzleInput?.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          checkCode();
+        }
+      });
+    </script>
+  </body>
+</html>

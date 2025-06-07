@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Escape Room</title>
+    <link rel="stylesheet" href="/static/start.css" />
+    <link rel="stylesheet" href="/static/global.css" />
+    <link rel="stylesheet" href="/static/whoareyou.css" />
+    <style>
+      .identity-panel {
+        position: relative;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border: 1px solid #00ff00;
+        box-shadow: 0 0 15px #00ff00;
+        width: 80%;
+        max-width: 500px;
+        z-index: 10;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 1s, transform 1s;
+      }
+
+      .identity-panel.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .identity-header {
+        color: #00ff00;
+        font-family: "Courier New", monospace;
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+      }
+
+      .identity-name {
+        color: #ffffff;
+        font-family: "Courier New", monospace;
+        font-size: 2em;
+        font-weight: bold;
+        text-shadow: 0 0 10px #ffffff, 0 0 20px #00ff00;
+        margin: 20px 0;
+        letter-spacing: 2px;
+      }
+
+      .identity-status {
+        color: #00ff00;
+        font-family: "Courier New", monospace;
+        font-size: 1em;
+        margin-top: 15px;
+      }
+
+      .identity-warning {
+        color: #ff0000;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+        margin-top: 20px;
+        animation: blink 1.5s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="typewriter-container">
+        <p id="typewriter-text" class="typewriter-text"></p>
+      </div>
+
+      <div id="identity-panel" class="identity-panel">
+        <div class="identity-header">SUBJECT IDENTIFIED</div>
+        <div class="identity-name" id="subject-name"></div>
+        <div class="identity-status">STATUS: ACTIVE</div>
+        <div class="identity-warning">WARNING: YOU ARE BEING WATCHED</div>
+      </div>
+
+      <div class="time-container">
+        <p id="time-text" class="hidden">
+          you need to <span class="identity-name">ESCAPE</span>.
+        </p>
+      </div>
+      <div class="start-button">
+        <button id="start-button" class="hidden flicker" onclick="nextScene()">
+          CONTINUE
+        </button>
+      </div>
+    </div>
+    <div class="matrix_animation matrix">
+      <img src="/static/matrix.gif" alt="Matrix" width="100%" height="100%" />
+    </div>
+
+    <script>
+      const serverName = "{{ name }}";
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = serverName || urlParams.get("name") || "UNKNOWN SUBJECT";
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const text = `wake up ${name.toLowerCase()}.`;
+        const typewriterElement = document.getElementById("typewriter-text");
+        const timeElement = document.getElementById("time-text");
+        const startButton = document.getElementById("start-button");
+        const identityPanel = document.getElementById("identity-panel");
+        const subjectName = document.getElementById("subject-name");
+
+        subjectName.textContent = name.toUpperCase();
+
+        let i = 0;
+
+        // typewriter effects
+        function typeWriter() {
+          if (i < text.length) {
+            typewriterElement.textContent += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 100);
+          } else {
+            setTimeout(function () {
+              // Show the identity panel after typewriter effect
+              identityPanel.classList.add("visible");
+
+              setTimeout(function () {
+                timeElement.classList.remove("hidden");
+
+                setTimeout(function () {
+                  startButton.classList.remove("hidden");
+                }, 1000);
+              }, 2000);
+            }, 1000);
+          }
+        }
+
+        typeWriter();
+
+        startButton.addEventListener("click", function () {
+          nextScene();
+        });
+      });
+
+      function nextScene() {
+        document.querySelector(".container").classList.add("hidden");
+        window.location.href = "/what?name=" + encodeURIComponent(name);
+      }
+    </script>
+  </body>
+</html>

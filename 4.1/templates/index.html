@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vote on a steak</title>
+  </head>
+  <script>
+    function upvote() {
+      let upvoteCount = document.getElementById("upvote").textContent;
+      fetch("/upvote", { method: "POST" })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Upvotes: " + data.upvote);
+          document.getElementById("upvote").textContent = data.upvote;
+        });
+
+      // fetch("/upvote", { method: "GET" })
+      //   .then((response) => response.json())
+      //   .then((data) => {
+      //     console.log("Upvotes: " + data.upvote);
+      //     document.getElementById("upvote").textContent = data.upvote;
+      //   });
+    }
+
+    function downvote() {
+      fetch("/downvote", { method: "POST" })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Downvotes: " + data.downvote);
+          document.getElementById("downvote").textContent = data.downvote;
+        });
+    }
+  </script>
+  <style>
+    section {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 50px;
+    }
+    div {
+      text-align: center;
+    }
+    img {
+      border-radius: 10px;
+    }
+    .votes {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .votes div {
+      margin: 0 20px;
+      text-align: center;
+    }
+  </style>
+  <body>
+    <section>
+      <div>
+        <h1>Vote on this Ribeye Steak</h1>
+        <img
+          src="static/ribeye.jpg"
+          alt="Ribeye Steak"
+          style="width: 300px; height: 300px"
+        />
+        <p>Do you like this Ribeye Steak?</p>
+      </div>
+      <div class="votes">
+        <div>
+          <h1>Upvote</h1>
+          <p id="upvote">{{ votes.upvote }}</p>
+          <button onclick="upvote()">Upvote</button>
+        </div>
+        <div>
+          <h1>Downvote</h1>
+          <p id="downvote">{{ votes.downvote }}</p>
+          <button onclick="downvote()">Downvote</button>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

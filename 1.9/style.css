@@ -1,0 +1,24 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #f5deb3;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+p {
+  font-style: italic;
+}
+
+div {
+  width: 50%;
+}
+
+.recipie {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

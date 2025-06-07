@@ -1,0 +1,10 @@
+body {
+  background-color: #000000;
+  font-family: sans-serif;
+  color: #fff;
+  overflow: hidden;
+}
+
+#start-button:hover {
+  cursor: pointer;
+}
